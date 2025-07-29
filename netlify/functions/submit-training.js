@@ -67,10 +67,27 @@ exports.handler = async (event, context) => {
       '4+': '4+ hours'
     };
 
-    // Create MINIMAL data payload for testing
-    console.log('=== CREATING AIRTABLE PAYLOAD ===');
+    // Map understanding rating values
+    const ratingMap = {
+      '5': '5 - Excellent understanding, fully confident',
+      '4': '4 - Good understanding, mostly confident',
+      '3': '3 - Adequate understanding, somewhat confident',
+      '2': '2 - Limited understanding, need more practice',
+      '1': '1 - Poor understanding, need additional training'
+    };
+
+    // Map additional training values
+    const trainingMap = {
+      'no': 'No, I feel confident operating the systems',
+      'yes-minor': 'Yes, minor additional training would be helpful',
+      'yes-major': 'Yes, significant additional training is needed'
+    };
+
+    // Create COMPLETE data payload with all form fields
+    console.log('=== CREATING COMPLETE AIRTABLE PAYLOAD ===');
     const airtableData = {
       fields: {
+        // Required fields
         'First Name': formData.firstName,
         'Last Name': formData.lastName,
         'Email': formData.email,
@@ -78,8 +95,30 @@ exports.handler = async (event, context) => {
         'Trainer Name': formData.trainer || 'Test Trainer',
         'Digital Signature': formData.digitalSignature || 'Test Signature',
         'Signature Date': formData.signatureDate || new Date().toISOString().split('T')[0],
-        // Only include duration if it exists and map it properly
-        ...(formData.duration && { 'Duration': durationMap[formData.duration] || formData.duration })
+        
+        // Optional customer info fields
+        'Phone': formData.phone || '',
+        'Organization': formData.organization || '',
+        'Job Title': formData.jobTitle || '',
+        
+        // Training details
+        'Training Time': formData.trainingTime || '',
+        'Duration': formData.duration ? (durationMap[formData.duration] || formData.duration) : '',
+        'Location': formData.location || '',
+        
+        // Systems covered
+        'Systems Covered': formData.systems ? formData.systems.join(', ') : '',
+        'Other Systems': formData.otherSystems || '',
+        
+        // Assessment fields
+        'Understanding Rating': formData.understanding ? (ratingMap[formData.understanding] || formData.understanding) : '',
+        'Additional Training Needed': formData.additionalTraining ? (trainingMap[formData.additionalTraining] || formData.additionalTraining) : '',
+        'Comments': formData.comments || '',
+        
+        // System fields
+        'IP Address': formData.ipAddress || event.headers['x-forwarded-for'] || 'Unknown',
+        'Submission Time': formData.submissionTime || new Date().toISOString(),
+        'Status': 'Completed'
       }
     };
 
