@@ -443,15 +443,9 @@
                             <input type="text" id="digitalSignature" name="digitalSignature" placeholder="Type your full legal name" required>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="signatureDate">Signature Date *</label>
-                                <input type="date" id="signatureDate" name="signatureDate" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="ipAddress">IP Address (Auto-filled)</label>
-                                <input type="text" id="ipAddress" name="ipAddress" readonly style="background: #e9ecef;">
-                            </div>
+                        <div class="form-group">
+                            <label for="signatureDate">Signature Date *</label>
+                            <input type="date" id="signatureDate" name="signatureDate" required>
                         </div>
                     </div>
                 </div>
@@ -472,9 +466,6 @@
         // Auto-fill today's date for signature
         document.getElementById('signatureDate').valueAsDate = new Date();
         document.getElementById('trainingDate').valueAsDate = new Date();
-
-        // Simulate IP address (in real implementation, this would be server-side)
-        document.getElementById('ipAddress').value = '192.168.1.100';
 
         // Secure serverless function approach - no tokens in client-side code!
         
